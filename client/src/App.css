@@ -1,8 +1,12 @@
 #root {
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding-top: 56px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100vh;
 }
 
 .logo {
@@ -39,4 +43,31 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.caption-button {
+  text-decoration: none;
+  cursor: pointer;
+  color: black;
+  padding: 5px 10px;
+  margin-right: 10px;
+  border: 1px solid black !important;
+  border-radius: 10px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Box shadow */
+  transition: box-shadow 0.3s ease;
+}
+
+.caption-button:hover {
+  color: black;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7); /* Stronger shadow on hover */
+}
+
+#home-page {
+  /* background-image: url('/background.svg');
+  background-size: cover;
+  background-repeat: no-repeat; */
+  /* Prevent repeating the image */
+  background-position: center;
+  background-color: var(--orange-400);
+  width: 100%;
 }
