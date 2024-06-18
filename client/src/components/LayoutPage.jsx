@@ -7,13 +7,31 @@ import { useState, useEffect } from "react";
 import { LoginForm } from './Auth';
 import { Item } from './Item'; // to be removed
 import { useNavigate, useLocation } from "react-router-dom";
+import { HomePageButton } from "./Buttons";
+import Timer from "./Timer";
+import { TimeAlert } from "./LayoutAlerts";
+// import {GuessTrueAlert, MatchAlert} from "./LayoutAlerts";
 
 
 function HomePage(props) {
 
+  // const [matchItemList, setMatchItemList] = useState([]);
+
+
+  // useEffect(() => {
+  //   console.log("second useeffect running");
+  //   const getItems = async () => {
+  //     const items = await API.getItems(loggedIn);
+  //     console.log(loggedIn, 'Setting items:', items);
+  //     setMatchItemList(items);
+  //     // setReady(true);
+  //   }
+  //   getItems();
+  // }, [props.loggedIn, restartGame]);
+
     return (
       <Container fluid id='home-page' className="d-flex align-items-center flex-column justify-content-center">
-        <Menu loggedIn= {props.loggedIn} />
+        <Menu loggedIn= {props.loggedIn} matchItemList={props.matchItemList} /*matchItemList={props.matchItemList}*//>
       </Container>
     );
 }
@@ -58,37 +76,111 @@ function HomePage(props) {
 //     );
 // } 
 
-function MatchPage({ round , ...props }) {
-  const matchItemList = ["diet", "m3alem", "nostress", "pshhhh", "shafik"];
-  const captionlist = ["sad", "desperate", "wtfff", "styel", "dkdkdd", "dkdkdk"];
+function MatchPage({ round , delay , ...props }) {
+  // const matchItemList = ["diet", "m3alem", "nostress", "pshhhh", "shafik"];
+  //const captionlist = ["sad", "desperate", "wtfff", "styel", "dkdkdd", "dkdkdk"];
+  //const [matchItemList, setMatchItemList] = useState([]);
+  const [captionTrueList, setCaptionTrueList] = useState([]);
+  const [captionFalseList, setCaptionFalseList] = useState([]);
+  const [captionList, setcaptionList] = useState([]);
+  const [ready, setReady] = useState(false);
+  const [showTimeAlert, setShowTimeAlert] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(false);
+
+  //const [alert, setAlert] = useState();
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  let thelist = location.state || matchItemList;
+  // let thelist = location.state 
+  // console.log(thelist); console.log("thelist in round "+round)
 
-  let randomIndex = Math.floor(Math.random() * thelist.length);
+  // while (used.includes(randomIndex)) { i will use this later as loop on the list to avoid the random selection that is changing the selected item
+  // and in turn causing many re-renders untill the state is the same.
+  // const selecteditem = thelist[0];
+  // console.log("selectedItem "+selecteditem);
+  // const newList = thelist && thelist.length > 0 ? thelist.slice(1) : [];
 
-  const newList = thelist.filter((_, index) => index !== randomIndex);
+  
+  // const randomIndex = thelist && thelist.length > 0 ? Math.floor(Math.random() * thelist.length) : -1;
+  // const selectedItem = randomIndex !== -1 ? thelist[randomIndex] : null;
+  // console.log("selectedItem "+selectedItem);
+  // const newList = thelist && thelist.length > 0 ? thelist.filter((_, index) => index !== randomIndex) : [];
 
   const goToNextRound = () => {
     if(round === 3) {
       navigate('/history');
       return;
     }
-    navigate(`/game/round${round + 1}`, { state: newList });
+    navigate(`/game/round${round + 1}`,/* { state: newList }*/);
   };
 
-  // if (randomIndex === null) {
-  //   return <div>Loading...</div>;
-  // }
+  useEffect(() => {
+    let mounted = true;
+  
+    const fetchCaptions = async () => {
+
+      try {
+        const captionTrueList = await API.getCaptionsForItem(/*selecteditem.id*/props.memeItem.id);
+        console.log(captionTrueList);
+  
+        if (mounted) {
+          setCaptionTrueList(captionTrueList);
+  
+          if (captionTrueList.length > 0) {
+            const captionFalseList = await API.getRandomCaptionsExcluding(captionTrueList.map(caption => caption.id));
+  
+            if (mounted) {
+              setCaptionFalseList(captionFalseList);
+  
+              if (captionFalseList.length > 0) {
+                setcaptionList(captionTrueList.concat(captionFalseList));
+                setReady(true);
+              }
+            }
+          }
+        }
+      } catch (e) {
+        console.log("Error getting the list of captions for the match", e);
+      }
+    };
+  
+    fetchCaptions();
+    return () => {
+      mounted = false;
+    };
+  }, [/*selecteditem.id*/props.memeItem.id]);
+
+  console.log("captionTrueList "+captionTrueList);
+
+  // const captionlistshuffeled = captionList.sort(() => Math.random() - 0.5);
+ 
 
   return (
     <Container fluid id='match-page' className="vh-100 d-flex align-items-center flex-column justify-content-center no-borders">
+      <Timer round={round} delay={delay} callback={() => setShowTimeAlert(true)} />
+      {showTimeAlert && !selectedItem &&
+      <TimeAlert 
+        guessedTrue={false} 
+        restartGame={props.restartGame} 
+        setRestartGame={props.setRestartGame} 
+        caption1={captionTrueList[0]} 
+        caption2={captionTrueList[1]} 
+        round={round} 
+        loggedIn={props.loggedIn} 
+        /*newList={newList}*/ 
+        setShowTimeAlert={setShowTimeAlert}
+      />}
       <h1>Round = {round}</h1>
-      <Item key={thelist[randomIndex]} item={thelist[randomIndex]} /> 
-      <Captions captionlist={captionlist} />
+      {/* {ready? <Item key={thelist[randomIndex]} item={thelist[randomIndex]} /> : <Spinner animation="border" variant="dark" />} */}
+      {ready? <Item /*key={selecteditem} item={selecteditem}*/ key={props.memeItem} item={props.memeItem} /> : <Spinner animation="border" variant="dark" />}
+
+      {ready? <Captions setSelectedItem={setSelectedItem} restartGame={props.restartGame} setRestartGame={props.setRestartGame} captionlist={captionList} captionTrueList={captionTrueList} loggedIn={props.loggedIn} round={round} /*newList={newList}*/ /> : <Spinner animation="border" variant="dark" />}
+      {/* {guessedTrue && <GuessTrueAlert guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} />} */}
+      {/* {guessedTrue !== undefined && <MatchAlert guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} setRestartGame={props.setRestartGame} />} */}
       {props.loggedIn && <button onClick={goToNextRound}>Next Round</button>}
+
+      <HomePageButton />
     </Container>
   );
 }

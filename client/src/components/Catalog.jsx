@@ -1,6 +1,7 @@
 import Container from 'react-bootstrap/Container';
 import { Item } from './Item';
 import { CaptionItem } from './CaptionItem';
+import { useState } from 'react';
 
 const Catalog = ({ itemList}) => {
 
@@ -17,13 +18,14 @@ const Catalog = ({ itemList}) => {
     );
 }
 
-function Captions({captionlist}){
+function Captions({setSelectedItem, captionlist, captionTrueList, loggedIn, round, /*newList,*/ restartGame, setRestartGame}){
+    // const [disabled, setDisabled] = useState(false);
     return(
         <div className="match-container no-borders">
             <Container fluid className="d-flex flex-row flex-wrap align-items-center justify-content-center catalog">
                 {
-                    captionlist.map((item, index) => (
-                        <CaptionItem key={index} item={item}></CaptionItem>
+                    captionlist.map((caption, index) => (
+                        <CaptionItem  setSelectedItem={setSelectedItem} restartGame={restartGame} setRestartGame={setRestartGame} key={index} caption={caption} captionTrueList={captionTrueList} loggedIn={loggedIn} round = {round}/* newList= {newList}*/></CaptionItem>
                     ))
                 }
             </Container>

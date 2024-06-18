@@ -1,0 +1,10 @@
+GET http://localhost:3001/items/true
+
+###
+
+GET http://localhost:3001/captions/2
+
+###
+
+Get http://localhost:3001/captions/1,2
+

@@ -5,7 +5,10 @@ import cors from 'cors';
 import {check, validationResult} from 'express-validator';
 
 
-import {getUser} from './dao-users.mjs';
+import * as historyDao from './dao-history.mjs';
+import * as itemDao from './dao-items.mjs';
+import { getUser } from './dao-users.mjs';
+import { getRandomCaptionsExcluding, getRelatedCaptionsForItem } from './dao-captions.mjs';
 
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
@@ -108,6 +111,64 @@ app.get('/api/history/get',
     }
   }
 );
+
+app.get('/items/:isLoggedIn',
+  async (req, res) => {
+    try {
+      const loggedIn = req.params.isLoggedIn === 'true';
+      const result = await itemDao.listItems(loggedIn)
+      if (result.error)
+        res.status(404).json(result);
+      else
+        res.json(result);
+    } catch (err) {
+      res.status(500).end();
+    }
+  }
+);
+
+app.get('/captions/:itemId',
+  async (req, res) => {
+    try {
+      const result = await getRelatedCaptionsForItem(req.params.itemId)
+      if (result.error)
+        res.status(404).json(result);
+      else
+        res.json(result);
+    } catch (err) {
+      res.status(500).end();
+    }
+  }
+);
+
+app.get('/captions/random/:captionIds',
+  async (req, res) => {
+    try {
+      const captionIds = req.params.captionIds.split(',');
+      const result = await getRandomCaptionsExcluding(captionIds);
+      if (result.error)
+        res.status(404).json(result);
+      else
+        res.json(result);
+    } catch (err) {
+      res.status(500).end();
+    }
+  }
+);
+
+// app.get('/items/:itemId',
+//   async (req, res) => {
+//     try {
+//       const result = await getCaptionsForItem(req.params.itemId)
+//       if (result.error)
+//         res.status(404).json(result);
+//       else
+//         res.json(result);
+//     } catch (err) {
+//       res.status(500).end();
+//     }
+//   }
+// );
 
 
 // activate the server

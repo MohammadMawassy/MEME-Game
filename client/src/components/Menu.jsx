@@ -6,7 +6,7 @@ const Menu = (props) => {
     return (
         <div className="menu shadow">
             
-            <StartButton loggedIn = {props.loggedIn}></StartButton>
+            <StartButton loggedIn = {props.loggedIn} matchItemList={props.matchItemList}></StartButton>
             
         </div>
     );

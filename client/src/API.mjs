@@ -1,5 +1,9 @@
+import { Item } from "../../server/ItemCaptionmodel.mjs";
+
+
 
 const SERVER_URL = 'http://localhost:3001';
+
 
 
 /**
@@ -29,6 +33,38 @@ function getJson(httpResponsePromise) {
       ) // connection error
   });
 }
+
+// function getJson(httpResponsePromise) {
+//   return new Promise((resolve, reject) => {
+//     httpResponsePromise
+//       .then((response) => {
+//         if (response.ok) {
+//           response.json()
+//             .then(json => resolve(json))
+//             .catch(err => {
+//               response.text().then(text => {
+//                 console.error("Error parsing JSON:", text);
+//                 reject({ error: "Cannot parse server response", details: text });
+//               });
+//             });
+//         } else {
+//           response.json()
+//             .then(obj => reject(obj))
+//             .catch(err => {
+//               response.text().then(text => {
+//                 console.error("Error parsing JSON:", text);
+//                 reject({ error: "Cannot parse server response", details: text });
+//               });
+//             });
+//         }
+//       })
+//       .catch(err => {
+//         console.error("Network error:", err);
+//         reject({ error: "Cannot communicate", details: err });
+//       });
+//   });
+// }
+
 
 const getUserHistory = async () => {
   return getJson(
@@ -75,5 +111,38 @@ const logOut = async() => {
     return null;
 }
 
-const API = {  logIn, logOut, getUserInfo, getUserHistory };
+const getItems = async (isLoggedIn) => {
+    const response = await fetch(SERVER_URL + '/items/' + isLoggedIn)
+    if(response.ok) {
+      const itemsJson = await response.json();
+      return itemsJson.map(item => new Item(item.id, item.name, item.cap1, item.cap2));
+    }
+    else
+    throw new Error('Internal server error');
+}
+
+const getCaptionsForItem = async (itemId) => {
+  const response = await fetch(SERVER_URL + '/captions/' + itemId);
+  if(response.ok) {
+    const responseJson = await response.json();
+    console.log(responseJson, "response from getCaptionsForItem"+itemId);
+    return responseJson;
+  }
+  else {
+    throw new Error('Internal server error');
+  }
+}
+
+const getRandomCaptionsExcluding = async (excludeIds) => {
+  const response = await fetch(SERVER_URL + '/captions/random/' + excludeIds.join(','));
+  if(response.ok) {
+    console.log(response, "response from getRandomCaptionsExcluding");
+    return await response.json();
+  }
+  else {
+    throw new Error('Internal server error');
+  }
+}
+
+const API = { getItems, getCaptionsForItem, getRandomCaptionsExcluding, logIn, logOut, getUserInfo, getUserHistory };
 export default API;
