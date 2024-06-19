@@ -61,7 +61,7 @@ function LoginForm(props) {
   function LoginButton() {
     const navigate = useNavigate();
     return (
-      <Button className='nav-button' variant="btn btn-otuline-dark" onClick={() => navigate('/login')}>Login</Button>
+      <Button className='nav-button btn-light' variant="btn" onClick={() => navigate('/login')}>Login</Button>
     )
   }
 

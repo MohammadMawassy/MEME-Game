@@ -27,7 +27,7 @@ const CaptionItem = (props) => {
                 }} variant="link" className="caption-button" >
                 {caption.text}
             </Button>
-            {(alert) && <MatchAlert restartGame={props.restartGame} setRestartGame={props.setRestartGame} guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} round={props.round} /*newList={props.newList}*/ setAlert={setAlert}/* setRestartGame={props.setRestartGame*/ loggedIn={props.loggedIn} />}
+            {(alert) && <MatchAlert setSelectedItem={props.setSelectedItem} restartGame={props.restartGame} setRestartGame={props.setRestartGame} guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} round={props.round} newList={props.newList} setAlert={setAlert} loggedIn={props.loggedIn} />}
         </>
         
     );

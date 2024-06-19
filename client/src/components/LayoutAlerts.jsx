@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CaptionItem, TrueCaption } from './CaptionItem';
 
 
-function MatchAlert({ guessedTrue, caption1, caption2, restartGame, setRestartGame, loggedIn, round, /*newList,*/ setAlert}) {
+function MatchAlert({setSelectedItem, guessedTrue, caption1, caption2, restartGame, setRestartGame, loggedIn, round, newList, setAlert}) {
 
     let message = '';
     let variant = '';
@@ -16,8 +16,9 @@ function MatchAlert({ guessedTrue, caption1, caption2, restartGame, setRestartGa
           setRestartGame(!restartGame);
           return;
         }
-        navigate(`/game/round${round + 1}`/*, { state: newList }*/)
+        navigate(`/game/round${round + 1}`, { state: newList })
         setAlert(false);
+        setSelectedItem(false);
     };
 
     guessedTrue ? (message = "YOU WON", variant = "success", score = 5) : (message = "YOU LOST", score = 0, variant = "warning");
@@ -51,7 +52,7 @@ function MatchAlert({ guessedTrue, caption1, caption2, restartGame, setRestartGa
 
 
 
-function TimeAlert({ guessedTrue, restartGame, setRestartGame, caption1, caption2, round, loggedIn, /*newList,*/ setShowTimeAlert}) {
+function TimeAlert({ guessedTrue, restartGame, setRestartGame, caption1, caption2, round, loggedIn, newList, setShowTimeAlert}) {
 
     let message = '';
     let variant = '';
@@ -64,7 +65,7 @@ function TimeAlert({ guessedTrue, restartGame, setRestartGame, caption1, caption
           setRestartGame(!restartGame);
           return;
         }
-        navigate(`/game/round${round + 1}`, /*{ state: newList }*/)
+        navigate(`/game/round${round + 1}`, { state: newList })
         // setAlert(false);
         setShowTimeAlert(false);
     };
@@ -84,7 +85,7 @@ function TimeAlert({ guessedTrue, restartGame, setRestartGame, caption1, caption
                 </Row>
                 {/* <Row><Col>To see your total score go on your <Link to={'/history'} style={{ color: 'black' }}>history</Link> section.</Col></Row> */}
 
-                {!guessedTrue ? <><hr /> <Row><Col className='d-flex align-items-center flex-column'><p>The secret item was</p> <TrueCaption caption={caption1} ></TrueCaption></Col></Row></> : []}
+                {!guessedTrue ? <><hr /> <Row><Col className='d-flex align-items-center flex-column'><p>The correct captions were:</p> <TrueCaption caption={caption1} ></TrueCaption></Col></Row></> : []}
                 {!guessedTrue ? <Row><Col className='d-flex align-items-center flex-column'> <TrueCaption caption={caption2} ></TrueCaption></Col></Row> : []}
 
                 <hr />

@@ -17,8 +17,8 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false); // to be changed to false
   const [user, setUser] = useState("soso");
   const [message, setMessage] = useState('');
-  const [restartGame, setRestartGame] = useState();
-  const [isLoading, setIsLoading] = useState(true);
+  const [restartGame, setRestartGame] = useState(false);
+  //const [isLoading, setIsLoading] = useState(true);
 
   const handleLogin = async (credentials) => {
     try {
@@ -63,14 +63,14 @@ function App() {
       const items = await API.getItems(loggedIn);
       console.log(loggedIn, 'Setting items:', items);
       setMatchItemList(items);
-      setIsLoading(false)
+      //setIsLoading(false)
     }
     getItems();
  }, [loggedIn, restartGame]);
 
- if(isLoading) {
-    return  <div>Loading...</div>;
-  }
+//  if(isLoading) {
+//     return  <div>Loading...</div>;
+//   }
 
   return (
         <Container>
@@ -78,10 +78,10 @@ function App() {
 
             <Routes>
                 <Route path="/" element={<HomePage loggedIn = {loggedIn} matchItemList={matchItemList} />} />
-                <Route path="/match" element={<MatchPage memeItem={matchItemList[0]}  round = {0} delay={4} loggedIn = {loggedIn} restartGame={restartGame} setRestartGame={setRestartGame}/> } />
-                <Route path="/game/round1" element={(loggedIn && user) ? <MatchPage memeItem={matchItemList[0]} round = {1} delay={4} loggedIn = {loggedIn} /> : <Navigate replace to='/'/>} />  // another solution is to use state
-                <Route path="/game/round2" element={(loggedIn && user) ? <MatchPage memeItem={matchItemList[1]} round = {2} delay={4} loggedIn = {loggedIn} /> : <Navigate replace to='/'/>} />
-                <Route path="/game/round3" element={(loggedIn && user) ? <MatchPage memeItem={matchItemList[2]} round = {3} delay={4} loggedIn = {loggedIn} /> : <Navigate replace to='/'/>} />
+                <Route path="/match" element={<MatchPage round = {0} delay={4} loggedIn = {loggedIn} restartGame={restartGame} setRestartGame={setRestartGame}/> } />
+                <Route path="/game/round1" element={(loggedIn && user) ? <MatchPage round = {1} delay={4} loggedIn = {loggedIn} restartGame={restartGame} setRestartGame={setRestartGame} /> : <Navigate replace to='/'/>} />  // another solution is to use state
+                <Route path="/game/round2" element={(loggedIn && user) ? <MatchPage round = {2} delay={4} loggedIn = {loggedIn} restartGame={restartGame} setRestartGame={setRestartGame} /> : <Navigate replace to='/'/>} />
+                <Route path="/game/round3" element={(loggedIn && user) ? <MatchPage round = {3} delay={4} loggedIn = {loggedIn} restartGame={restartGame} setRestartGame={setRestartGame} /> : <Navigate replace to='/'/>} />
                 <Route path='/login' element={!loggedIn ? <LoginPage login={loggedIn} loginaction={handleLogin} /> : <Navigate replace to='/' />} />
                 <Route path="/history" element={(loggedIn && user) ? <HistoryPage user={user} /> : <Navigate replace to='/login' />} />
             </Routes>
