@@ -1,5 +1,5 @@
 import { Menu } from "./Menu";
-import { Spinner, Container } from 'react-bootstrap';
+import { Spinner, Container, Row } from 'react-bootstrap';
 import { Catalog, Captions } from "./Catalog";
 import API from "../API.mjs";
 import { HistoryTable } from "./HistroyTable";
@@ -118,31 +118,36 @@ function MatchPage({ round , delay , ...props }) {
   console.log("showTimeAlert",showTimeAlert)
 
   return (
-    <Container fluid id='match-page' className="vh-100 d-flex align-items-center flex-column justify-content-center no-borders">
-      <Timer round={round} delay={delay} callback={() => setShowTimeAlert(true)} />
-      {!selectedItem && showTimeAlert &&
-      <TimeAlert 
-        guessedTrue={false} 
-        restartGame={props.restartGame} 
-        setRestartGame={props.setRestartGame} 
-        caption1={captionTrueList[0]} 
-        caption2={captionTrueList[1]} 
-        round={round} 
-        loggedIn={props.loggedIn} 
-        newList={newList} 
-        setShowTimeAlert={setShowTimeAlert}
-      />}
-      <h1>Round = {round}</h1>
-      {/* {ready? <Item key={thelist[randomIndex]} item={thelist[randomIndex]} /> : <Spinner animation="border" variant="dark" />} */}
-      {ready? <Item key={selecteditem} item={selecteditem} /*key={props.memeItem} item={props.memeItem}*/ /> : <Spinner animation="border" variant="dark" />}
+    <div className="d-flex justfy-content-center p-5 dark-transparent-box ">
+      <div className="d-flex flex-column align-items-center me-3">
+        <div className="d-flex align-items-center w-100 justify-content-between">
+          <h1>Round {round}</h1>
+          <Timer round={round} delay={delay} callback={() => setShowTimeAlert(true)} />
+          {!selectedItem && showTimeAlert &&
+          <TimeAlert 
+            guessedTrue={false} 
+            restartGame={props.restartGame} 
+            setRestartGame={props.setRestartGame} 
+            caption1={captionTrueList[0]} 
+            caption2={captionTrueList[1]} 
+            round={round} 
+            loggedIn={props.loggedIn} 
+            newList={newList} 
+            setShowTimeAlert={setShowTimeAlert}
+          />}
+        </div>
+        {/* {ready? <Item key={thelist[randomIndex]} item={thelist[randomIndex]} /> : <Spinner animation="border" variant="dark" />} */}
+        {ready? <Item key={selecteditem} item={selecteditem} /*key={props.memeItem} item={props.memeItem}*/ /> : <Spinner animation="border" variant="dark" />}
+      </div>
+      <div className="d-flex flex-column justify-content-center">
+        {ready? <Captions setSelectedItem={setSelectedItem} restartGame={props.restartGame} setRestartGame={props.setRestartGame} captionlist={captionlistshuffeled} captionTrueList={captionTrueList} loggedIn={props.loggedIn} round={round} newList={newList} /> : <Spinner animation="border" variant="dark" />}
+        {/* {guessedTrue && <GuessTrueAlert guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} />} */}
+        {/* {guessedTrue !== undefined && <MatchAlert guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} setRestartGame={props.setRestartGame} />} */}
+        {props.loggedIn && <button onClick={goToNextRound}>Next Round</button>}
 
-      {ready? <Captions setSelectedItem={setSelectedItem} restartGame={props.restartGame} setRestartGame={props.setRestartGame} captionlist={captionlistshuffeled} captionTrueList={captionTrueList} loggedIn={props.loggedIn} round={round} newList={newList} /> : <Spinner animation="border" variant="dark" />}
-      {/* {guessedTrue && <GuessTrueAlert guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} />} */}
-      {/* {guessedTrue !== undefined && <MatchAlert guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} setRestartGame={props.setRestartGame} />} */}
-      {props.loggedIn && <button onClick={goToNextRound}>Next Round</button>}
-
-      <HomePageButton />
-    </Container>
+        <HomePageButton />
+      </div>
+    </div>
   );
 }
 
@@ -151,10 +156,10 @@ function MatchPage({ round , delay , ...props }) {
 function LoginPage(props) {
   return (
     !props.login && (<Container fluid id='history-page' className="d-flex align-items-center flex-column justify-content-center">
-      <div className='history-menu shadow p-4'>
+      <div className='dark-transparent-box p-4'>
         <LoginForm login={props.loginaction} />
       </div>
-    </Container>) 
+    </Container>)
   );
 }
 

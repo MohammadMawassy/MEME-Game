@@ -99,7 +99,7 @@ function Timer({round, delay, callback }) {
     return () => timer && clearInterval(timer);
   }, [countdown]);
 
-  return <div>{countdown}</div>;
+  return <div>{countdown} seconds remaining</div>;
 }
 
 // function Timer({ delay, callback }) {

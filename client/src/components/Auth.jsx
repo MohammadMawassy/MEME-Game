@@ -31,8 +31,8 @@ function LoginForm(props) {
             variant="danger">
             {errorMessage}
           </Alert> */}
-          <Form.Group className="mb-3" controlId="username">
-            <Form.Label>email</Form.Label>
+          <Form.Group className="mb-3 d-flex flex-column align-items-start" controlId="username" >
+            <Form.Label>Email</Form.Label>
             <Form.Control
               type="email"
               value={username} placeholder="meme.meme@polito.it"
@@ -40,7 +40,7 @@ function LoginForm(props) {
               required={true}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="password">
+          <Form.Group className="mb-2 d-flex flex-column align-items-start" controlId="password">
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
@@ -49,9 +49,9 @@ function LoginForm(props) {
               required={true} minLength={6}
             />
           </Form.Group>
-          <Button className="mt-3 guess-button" type="submit">Login</Button>
-          {'    '}     
-          <Button className="mt-3 guess-button" variant='danger' onClick={() => { navigate('..')}}>Cancel</Button>
+          <Button className="mt-3 guess-button btn-light mx-2" type="submit">Login</Button>
+             
+          <Button className="mt-3 guess-button btn-light mx-2" onClick={() => { navigate('..')}}>Cancel</Button>
         </Form>
       </Col>
     </Row>
@@ -67,9 +67,7 @@ function LoginForm(props) {
 
   function LogoutButton(props) {
     return (
-      <>
-        <Button className='nav-button' variant="btn btn-otuline-dark" onClick={props.logout}>Logout</Button>
-      </>
+      <Button className='nav-button' variant="btn btn-light" onClick={props.logout}>Logout</Button>
     )
   }
 

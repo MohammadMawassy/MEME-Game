@@ -13,9 +13,7 @@ function StartButton(props) {
 function HomePageButton(props) {
     const navigate = useNavigate();
     return (
-        <>
-            <Button onClick={() => navigate("/")} className='start-button guess-button py-3 shadow'>Return to HomePage</Button>
-        </>
+        <Button onClick={() => navigate("/")} className='p-2 btn btn-light shadow align-self-start'>Return to HomePage</Button>
     );
 }
 

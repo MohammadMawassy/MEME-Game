@@ -10,23 +10,21 @@ function Navigation (props) {
   const navigate = useNavigate();
 
   return (
-    <Navbar expand="sm" variant="dark" fixed="top" className="navbar">
-      <div class="navbar-row">
+    <Navbar expand="sm" variant="dark" fixed="top" className="navbar d-flex justify-content-between px-4">
+      {/* <div class="navbar-row"> */}
         <Link to="/">
           <Navbar.Brand>
             <span id="logo">Meme Match</span>
           </Navbar.Brand>
         </Link>
-        <span>
-          {props.loggedIn ? <><Button className='nav-button' onClick={() => navigate('/history')} variant="btn btn-otuline-dark">History</Button><LogoutButton logout={props.logout} /></> : <LoginButton />}
+        <div className='d-flex'>
           {props.loggedIn ?
-            <Navbar.Collapse className="justify-content-end me-4">
-              <Navbar.Text style={{ color: 'black' }}>
-                Signed in as: <strong>{props.user.name}</strong> 
-              </Navbar.Text>
-            </Navbar.Collapse> : []}
-        </span>
-      </div>
+            <Navbar.Text style={{ color: 'white' }}>
+              Signed in as: <strong>{props.user.name}</strong> 
+            </Navbar.Text> : []}
+          {props.loggedIn ? <><Button className='nav-button mx-3' onClick={() => navigate('/history')} variant="btn btn-light">History</Button><LogoutButton logout={props.logout} /></> : <LoginButton />}
+        </div>
+      {/* </div> */}
     </Navbar>
   )
 }

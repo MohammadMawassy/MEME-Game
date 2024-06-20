@@ -13,7 +13,7 @@ const CaptionItem = (props) => {
 
     return (
         <>
-            <Button  onClick={() => {
+            <Button onClick={() => {
                 // props.setDisabled(true)
                 if (captionTrueList.includes(caption)) {
                     setAlert(true);
@@ -24,7 +24,7 @@ const CaptionItem = (props) => {
                     setguessedTrue(false);
                     props.setSelectedItem(true)
                 }
-                }} variant="link" className="caption-button" >
+                }} className="caption-button btn btn-light me-3 mb-3" >
                 {caption.text}
             </Button>
             {(alert) && <MatchAlert setSelectedItem={props.setSelectedItem} restartGame={props.restartGame} setRestartGame={props.setRestartGame} guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} round={props.round} newList={props.newList} setAlert={setAlert} loggedIn={props.loggedIn} />}

@@ -13,27 +13,19 @@ a {
   color: white;
 }
 
-.navbar-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background: #005c228a;
-  color: white;
-  height: 56px;
-
+.main-game-container {
+  width: 800px;
 }
 
- #main-menu{
+.navbar {
   background: #005c228a;
   color: white;
-  padding: 100px 30px;
+}
+
+.dark-transparent-box {
+  background-color: #005c228a;
   border-radius: 20px;
+  color: white;
 }
 
 #logo {
@@ -83,21 +75,21 @@ body {
 }
 
 .caption-button {
-  text-decoration: none;
+  /* text-decoration: none;
   cursor: pointer;
   color: black;
   padding: 5px 10px;
   margin-right: 10px;
   border: 1px solid black !important;
   border-radius: 10px;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Box shadow */
-  transition: box-shadow 0.3s ease;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); 
+  transition: box-shadow 0.3s ease; */
 }
 
-.caption-button:hover {
+/* .caption-button:hover {
   color: black;
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7); /* Stronger shadow on hover */
-}
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
+} */
 
 #home-page {
   background-position: center;
