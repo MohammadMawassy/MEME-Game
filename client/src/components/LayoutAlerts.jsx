@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { CaptionItem, TrueCaption } from './CaptionItem';
 
 
-function MatchAlert({setSelectedItem, guessedTrue, caption1, caption2, restartGame, setRestartGame, loggedIn, round, newList, setAlert}) {
+function MatchAlert({ clicks, setSelectedItem, guessedTrue, setShowTimeAlert, caption1, caption2, restartGame, setRestartGame, loggedIn, round, newList, setAlert}) {
 
     let message = '';
     let variant = '';
@@ -22,7 +22,7 @@ function MatchAlert({setSelectedItem, guessedTrue, caption1, caption2, restartGa
     };
 
     guessedTrue ? (message = "YOU WON", variant = "success", score = 5) : (message = "YOU LOST", score = 0, variant = "warning");
-
+    
     return (
         <Alert key={variant} variant={variant} className="position-fixed top-50 start-50 translate-middle match-alert border-5 px-4 py-2" style={{ zIndex: '9999' }}>
             <div className='p-0'>
@@ -38,12 +38,12 @@ function MatchAlert({setSelectedItem, guessedTrue, caption1, caption2, restartGa
 
                 {!guessedTrue ? <><hr /> <Row><Col className='d-flex align-items-center flex-column'><p>The secret item was</p> <TrueCaption caption={caption1} ></TrueCaption></Col></Row></> : []}
                 {!guessedTrue ? <Row><Col className='d-flex align-items-center flex-column'> <TrueCaption caption={caption2} ></TrueCaption></Col></Row> : []}
-
                 <hr />
                 <div className="d-flex justify-content-center p-1">
-                    {!loggedIn ? <Button onClick={() => {navigate("/"); setRestartGame(!restartGame);}} variant={variant}>Restart a New Game</Button> : <Button onClick={() => {goToNextRound();}} variant={variant}>Next Round</Button>}
-                    
-                     
+                    {!loggedIn ? <Button onClick={() => {navigate("/"); setRestartGame(!restartGame);}} variant={variant}>Restart a New Game</Button> : <Button onClick={() => {setShowTimeAlert(false); goToNextRound();}} variant={variant}>Next </Button>}
+                    {'  '}
+                    {clicks===3 && <Button onClick={() => {navigate("/recap"); setRestartGame(!restartGame);}} variant={variant}>Game Summary</Button>}
+                                         
                 </div>
             </div>
         </Alert>
@@ -65,13 +65,13 @@ function TimeAlert({ guessedTrue, restartGame, setRestartGame, caption1, caption
           setRestartGame(!restartGame);
           return;
         }
+        setShowTimeAlert(false);
+
         navigate(`/game/round${round + 1}`, { state: newList })
         // setAlert(false);
-        setShowTimeAlert(false);
     };
-
-    guessedTrue ? (message = "YOU WON", variant = "success", score = 5) : (message = "Time Elapsed! YOU LOST", score = 0, variant = "warning");
-
+       message = "Time Elapsed! YOU LOST", score = 0, variant = "warning";
+       
     return (
         <Alert key={variant} variant={variant} className="position-fixed top-50 start-50 translate-middle match-alert border-5 px-4 py-2" style={{ zIndex: '9999' }}>
             <div className='p-0'>
@@ -90,7 +90,7 @@ function TimeAlert({ guessedTrue, restartGame, setRestartGame, caption1, caption
 
                 <hr />
                 <div className="d-flex justify-content-center p-1">
-                    {!loggedIn ? <Button onClick={() => {navigate("/"); setRestartGame(!restartGame);}} variant={variant}>Restart a New Game</Button> : <Button onClick={() => {goToNextRound();}} variant={variant}>Next Round</Button>}
+                    {!loggedIn ? <Button onClick={() => {navigate("/"); setRestartGame(!restartGame);}} variant={variant}>Restart a New Game</Button> : <Button onClick={() => { setShowTimeAlert(false); goToNextRound();}} variant={variant}>Next</Button>}
                     
                      
                 </div>

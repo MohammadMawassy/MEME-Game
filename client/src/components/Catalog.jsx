@@ -18,19 +18,17 @@ const Catalog = ({ itemList}) => {
     );
 }
 
-function Captions({setSelectedItem, captionlist, captionTrueList, loggedIn, round, newList, restartGame, setRestartGame}){
+function Captions({addgameresult, clicks, selecteditem, updateclicks, addSelection, setShowTimeAlert, setSelectedItem, captionlist, captionTrueList, loggedIn, round, newList, restartGame, setRestartGame}){
     // const [disabled, setDisabled] = useState(false);
     return(
         <div className="match-container d-flex flex-wrap">
             {
                 captionlist.map((caption, index) => (
-                    <CaptionItem  setSelectedItem={setSelectedItem} restartGame={restartGame} setRestartGame={setRestartGame} key={index} caption={caption} captionTrueList={captionTrueList} loggedIn={loggedIn} round = {round} newList= {newList}></CaptionItem>
+                    <CaptionItem addgameresult={addgameresult} clicks={clicks} selecteditem={selecteditem} addSelection={addSelection} updateclicks={updateclicks} setShowTimeAlert={setShowTimeAlert} setSelectedItem={setSelectedItem} restartGame={restartGame} setRestartGame={setRestartGame} key={index} caption={caption} captionTrueList={captionTrueList} loggedIn={loggedIn} round = {round} newList= {newList}></CaptionItem>
                 ))
             }
         </div >
     );
 }
-
-
 
 export { Catalog , Captions };

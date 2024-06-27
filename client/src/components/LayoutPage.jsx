@@ -14,40 +14,28 @@ import { TimeAlert } from "./LayoutAlerts";
 
 
 function HomePage(props) {
-
-  // const [matchItemList, setMatchItemList] = useState([]);
-
-
-  // useEffect(() => {
-  //   console.log("second useeffect running");
-  //   const getItems = async () => {
-  //     const items = await API.getItems(loggedIn);
-  //     console.log(loggedIn, 'Setting items:', items);
-  //     setMatchItemList(items);
-  //     // setReady(true);
-  //   }
-  //   getItems();
-  // }, [props.loggedIn, restartGame]);
-
     return (
       <Container fluid id='home-page' className="d-flex align-items-center flex-column justify-content-center">
-        <Menu loggedIn= {props.loggedIn} matchItemList={props.matchItemList} /*matchItemList={props.matchItemList}*//>
+        <Menu emptySelection={props.emptySelection} loggedIn= {props.loggedIn} matchItemList={props.matchItemList} /*matchItemList={props.matchItemList}*//>
       </Container>
     );
 }
 
 function MatchPage({ round , delay , ...props }) {
-  // const matchItemList = ["diet", "m3alem", "nostress", "pshhhh", "shafik"];
-  //const captionlist = ["sad", "desperate", "wtfff", "styel", "dkdkdd", "dkdkdk"];
-  //const [matchItemList, setMatchItemList] = useState([]);
   const [captionTrueList, setCaptionTrueList] = useState([]);
   const [captionFalseList, setCaptionFalseList] = useState([]);
   const [captionList, setcaptionList] = useState([]);
   const [ready, setReady] = useState(false);
   const [showTimeAlert, setShowTimeAlert] = useState(false);
   const [selectedItem, setSelectedItem] = useState(false);
+  const [clicks, setClicks] = useState(0);
+  const [gameResult, setGameResult] = useState([]); 
+  const [hasFunctionRun, setHasFunctionRun] = useState(false);
 
-  //const [alert, setAlert] = useState();
+  // if(gameResult.length === 3) {
+  //   setRender(true);
+  // }
+  // const [correctselection, setCorrectSelection] = useState([]);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -58,15 +46,27 @@ function MatchPage({ round , delay , ...props }) {
   // while (used.includes(randomIndex)) { i will use this later as loop on the list to avoid the random selection that is changing the selected item
   // and in turn causing many re-renders untill the state is the same.
   const selecteditem = thelist[0]
-  console.log("selectedItem "+selecteditem);
+  // console.log("selectedItem "+selecteditem);
   const newList = thelist && thelist.length > 0 ? thelist.slice(1) : [];
 
-  
   // const randomIndex = thelist && thelist.length > 0 ? Math.floor(Math.random() * thelist.length) : -1;
   // const selectedItem = randomIndex !== -1 ? thelist[randomIndex] : null;
   // console.log("selectedItem "+selectedItem);
   // const newList = thelist && thelist.length > 0 ? thelist.filter((_, index) => index !== randomIndex) : [];
 
+  function updateclicks() {
+    setClicks(prevClicks => prevClicks + 1);
+  }
+  console.log("clicks "+clicks);  
+
+  const addgameresult = (newelement ) => {
+    setGameResult(currentresult => [
+      ...currentresult,
+      newelement
+    ]);
+  };
+  console.log(gameResult.map((game) => `Date: ${game.date.toLocaleString()}, Meme: ${game.meme}, Score: ${game.score}, Game Score: ${game.GameScore}`).join('\n'));
+  
   const goToNextRound = () => {
     if(round === 3) {
       navigate('/history');
@@ -111,11 +111,51 @@ function MatchPage({ round , delay , ...props }) {
     };
   }, [selecteditem.id/*props.memeItem.id*/]);
 
-  console.log("captionTrueList "+captionTrueList);
+  // useEffect(() => {
+  //   if (/*props.user && props.user.id &&*/ clicks === 3 && gameResult.length === 3) {
+  //     const totalScore = gameResult.reduce((accumulator, currentValue) => accumulator + currentValue.score, 0);
+  //     const updatedGameResults = gameResult.map(game => ({
+  //       ...game,
+  //       totalScore: totalScore // Update totalScore to the latest value
+  //     }));
+  //     setGameResult(updatedGameResults); // Use setGameResult to update the state
+  //     console.log("gameResult[0] is the "+gameResult[0]);
+  
+  //     updatedGameResults.forEach(game => {
+  //       API.newHistory(game)
+  //         .then((result) => { })
+  //         .catch((e) => { console.log("Error storing the history", e); });
+  //     });
+  //   }
+  // }, []);
+
+  const handleGameResultUpdate = () => {
+    if (/*props.user && props.user.id &&*/ clicks === 3 && gameResult.length === 3) {
+      const totalScore = gameResult.reduce((accumulator, currentValue) => accumulator + currentValue.GameScore, 0);
+      const updatedGameResults = gameResult.map(game => ({
+        ...game,
+        GameScore: totalScore // Update totalScore to the latest value
+      }));
+      setGameResult(updatedGameResults); // Use setGameResult to update the state
+      console.log("gameResult[0] is the " + gameResult[0]);
+     // testgameresutls = [{date: new Date(), meme: "tato", score: 5, GameScore: 10 }, {date: new Date(), meme: "tato2", score: 5, GameScore: 20 }, {date: new Date(), meme: "tato3", score: 0, GameScore: 30}]
+  
+     updatedGameResults.forEach(game => {
+        API.newHistory(game)
+          .then((result) => { })
+          .catch((e) => { console.log("Error storing the history", e); });
+      });
+    }
+  };
+
+  console.log("has function run: ", hasFunctionRun);
+
+  if (clicks===3 && !hasFunctionRun) {
+    handleGameResultUpdate();
+    setHasFunctionRun(true); // Ensure the function won't be called again
+  }
 
   const captionlistshuffeled = captionList.sort(() => Math.random() - 0.5); // shuffle the list of captions to be displayed at every render as additional difficulty
-  console.log( "selectedItem",selectedItem)
-  console.log("showTimeAlert",showTimeAlert)
 
   return (
     <div className="d-flex justfy-content-center p-5 dark-transparent-box ">
@@ -136,22 +176,17 @@ function MatchPage({ round , delay , ...props }) {
             setShowTimeAlert={setShowTimeAlert}
           />}
         </div>
-        {/* {ready? <Item key={thelist[randomIndex]} item={thelist[randomIndex]} /> : <Spinner animation="border" variant="dark" />} */}
-        {ready? <Item key={selecteditem} item={selecteditem} /*key={props.memeItem} item={props.memeItem}*/ /> : <Spinner animation="border" variant="dark" />}
+        {ready? <Item key={selecteditem} item={selecteditem} /> : <Spinner animation="border" variant="dark" />}
       </div>
       <div className="d-flex flex-column justify-content-center">
-        {ready? <Captions setSelectedItem={setSelectedItem} restartGame={props.restartGame} setRestartGame={props.setRestartGame} captionlist={captionlistshuffeled} captionTrueList={captionTrueList} loggedIn={props.loggedIn} round={round} newList={newList} /> : <Spinner animation="border" variant="dark" />}
-        {/* {guessedTrue && <GuessTrueAlert guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} />} */}
-        {/* {guessedTrue !== undefined && <MatchAlert guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} setRestartGame={props.setRestartGame} />} */}
-        {props.loggedIn && <button onClick={goToNextRound}>Next Round</button>}
+        {ready? <Captions addgameresult={addgameresult} clicks={clicks} selecteditem={selecteditem} addSelection={props.addSelection} updateclicks={updateclicks} setShowTimeAlert={setShowTimeAlert} setSelectedItem={setSelectedItem} restartGame={props.restartGame} setRestartGame={props.setRestartGame} captionlist={captionlistshuffeled} captionTrueList={captionTrueList} loggedIn={props.loggedIn} round={round} newList={newList} /> : <Spinner animation="border" variant="dark" />}
+        //{props.loggedIn && <button onClick={goToNextRound}>Next Round</button>}
 
-        <HomePageButton />
+        <HomePageButton emptySelection={props.emptySelection} />
       </div>
     </div>
   );
 }
-
-
 
 function LoginPage(props) {
   return (
@@ -165,40 +200,21 @@ function LoginPage(props) {
 
 
 function HistoryPage(props) {
-    // const [history, setHistory] = useState([]);
     const [totalScore, setTotalScore] = useState(0);
-
-    const history = [
-      [1, 1, 5, 10, 'shafik'],
-      [1, 2, 0, 15, 'nostress'],
-      [2, 1, 3, 5, 'pshhhh']
-    ];
+    const [history, setHistory] = useState([]);
 
     useEffect(() => {
-      const totalsum = history.reduce((accumulator, currentValue) => {
-        // Access the score at the correct index (index 2 in this case)
-        const score = currentValue[2];
-        if (typeof score === 'number') {
-          return accumulator + score;
-        } else {
-          return accumulator; // Ignore non-numerical score values
-        }
-      }, 0);
-  
-      setTotalScore(totalsum);
-    }, [history]);
-  
-    // useEffect(() => {
-    //   API.getUserHistory()
-    //     .then((result) => {
-    //       setHistory(result);
-    //       const totalSum = result.reduce((accumulator, currentValue) => {
-    //         return accumulator + currentValue.score;
-    //       }, 0);
-    //       setTotalScore(totalSum);
-    //     })
-    //     .catch((e) => { console.log("Error displaying user history", e); })
-    // }, []);
+      API.getUserHistory()
+        .then((result) => {
+          setHistory(result);
+          console.log("result", result);
+          const totalSum = result.reduce((accumulator, currentValue) => {
+            return accumulator + currentValue.score;
+          }, 0);
+          setTotalScore(totalSum);
+        })
+        .catch((e) => { console.log("Error displaying user history", e); })
+    }, []);
   
     return (
       history ? (<Container fluid id='history-page' className="d-flex align-items-center flex-column justify-content-center">
@@ -213,6 +229,67 @@ function HistoryPage(props) {
       </Container>) : <Spinner animation="border" variant="dark" />
     );
 }
-  
 
-export { HomePage, MatchPage, HistoryPage, LoginPage}; 
+import Table from 'react-bootstrap/Table';
+import Image from 'react-bootstrap/Image';
+
+//import dayjs from 'dayjs';
+
+
+const Recappage = ({ correctselection }) => {
+
+    return (
+        <div className='history-container d-flex flex-column justify-column-center pt-0 px-2'>
+            {correctselection.length ? (
+                <>
+                    <hr className='mb-2' />
+                    <Table responsive="md">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                {/* <th className='text-center'>gameid</th> */}
+                                <th className='text-center'>Round Number</th>
+                                <th className='text-center'>Round Score</th>
+                                <th className='text-center'>True Caption Selected</th>
+                                <th className='text-center'>MEME</th>                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                correctselection.map((selection, index) => (
+                                    <tr key={index}>
+                                        <td>{index}</td>
+                                        <td className='text-center'>{selection.round}</td>
+                                        <td className='text-center'>{selection.score}</td>
+                                        <td className='text-center'>{selection.caption.text}</td>
+                                        {/* <td className='text-center'>{row[3]}</td> */}
+                                        <td className='text-center'>
+                                            <Image fluid className='item-image m-0 bg-card-image d-flex' src={`/memes_images/${selection.meme.name}.jpg`} style={{ maxWidth: '300px', maxHeight: '75px', objectFit: 'cover' }} />
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                      <tfoot>
+                        <tr>
+                          <td>The Total Score Obtained for this Game is {correctselection.reduce((accumulator, currentValue) => accumulator + currentValue.score, 0)}</td>
+                        </tr>
+                      </tfoot>
+                    </Table>
+                </>) : <p className='text-center pt-4 mt-2'>No summary!<br />play a complete match again!!!</p>}
+        </div>
+    );
+}  
+
+function NotFoundLayout() {
+  return (
+    <Container id="not-found-page" fluid className="vh-100 d-flex align-items-center flex-column justify-content-center">
+      <h2>This is not the route you are looking for!</h2>
+      <Link to="/">
+        <Button variant="primary" className='guess-button'>Go Home!</Button>
+      </Link>
+    </Container>
+  );
+}
+
+export { HomePage, MatchPage, HistoryPage, LoginPage, Recappage, NotFoundLayout}; 

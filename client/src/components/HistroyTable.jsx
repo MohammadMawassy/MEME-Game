@@ -39,7 +39,7 @@ const HistoryTable = ({ history }) => {
                             }
                         </tbody>
                     </Table>
-                </>) : <p className='text-center pt-4 mt-2'>You have no history,<br />play a match and then come back!</p>}
+                </>) : <p className='text-center pt-4 mt-2'>No history,<br />play a match and then come back!</p>}
         </div>
     );
 }

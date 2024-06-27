@@ -34,38 +34,6 @@ function getJson(httpResponsePromise) {
   });
 }
 
-// function getJson(httpResponsePromise) {
-//   return new Promise((resolve, reject) => {
-//     httpResponsePromise
-//       .then((response) => {
-//         if (response.ok) {
-//           response.json()
-//             .then(json => resolve(json))
-//             .catch(err => {
-//               response.text().then(text => {
-//                 console.error("Error parsing JSON:", text);
-//                 reject({ error: "Cannot parse server response", details: text });
-//               });
-//             });
-//         } else {
-//           response.json()
-//             .then(obj => reject(obj))
-//             .catch(err => {
-//               response.text().then(text => {
-//                 console.error("Error parsing JSON:", text);
-//                 reject({ error: "Cannot parse server response", details: text });
-//               });
-//             });
-//         }
-//       })
-//       .catch(err => {
-//         console.error("Network error:", err);
-//         reject({ error: "Cannot communicate", details: err });
-//       });
-//   });
-// }
-
-
 const getUserHistory = async () => {
   return getJson(
     fetch(SERVER_URL + "history/get", {
@@ -74,6 +42,24 @@ const getUserHistory = async () => {
   ).then((response) => { return response })
 }
 
+//! History
+const newHistory = async (gameResult) => {
+  return getJson(
+    fetch(SERVER_URL + "/history/store", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify({ gameResult })
+    })
+  )
+    .then(response => { return response })
+    .catch(error => {
+      console.error('Error storing the history', error);
+      throw error;
+    });
+}
 
 const logIn = async (credentials) => {
   const response = await fetch(SERVER_URL + '/api/sessions', {
@@ -144,5 +130,5 @@ const getRandomCaptionsExcluding = async (excludeIds) => {
   }
 }
 
-const API = { getItems, getCaptionsForItem, getRandomCaptionsExcluding, logIn, logOut, getUserInfo, getUserHistory };
+const API = {newHistory, getItems, getCaptionsForItem, getRandomCaptionsExcluding, logIn, logOut, getUserInfo, getUserHistory };
 export default API;

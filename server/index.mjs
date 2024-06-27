@@ -49,6 +49,7 @@ passport.deserializeUser(function (user, cb) {
 
 const isLoggedIn = (req, res, next) => {
   if(req.isAuthenticated()) {
+    console.log('User is authenticated',req)
     return next();
   }
   return res.status(401).json({error: 'Not authorized'});
@@ -75,7 +76,7 @@ app.post('/api/sessions', function(req, res, next) {
       req.login(user, (err) => {
         if (err)
           return next(err);
-        
+        console.log(req)
         // req.user contains the authenticated user, we send all the user info back
         return res.status(201).json(req.user);
       });
@@ -85,6 +86,7 @@ app.post('/api/sessions', function(req, res, next) {
 // GET /api/sessions/current -- NEW
 app.get('/api/sessions/current', (req, res) => {
   if(req.isAuthenticated()) {
+    console.log(req)
     res.json(req.user);}
   else
     res.status(401).json({error: 'Not authenticated'});
@@ -96,21 +98,6 @@ app.delete('/api/sessions/current', (req, res) => {
     res.end();
   });
 });
-
-app.get('/api/history/get',
-  isLoggedIn,
-  async (req, res) => {
-    try {
-      const result = await historyDao.getUserHistory(req.user.id);
-      if (result.error)
-        res.status(404).json(result);
-      else
-        res.status(200).json(result);
-    } catch (err) {
-      res.status(500).json({ error: err });
-    }
-  }
-);
 
 app.get('/items/:isLoggedIn',
   async (req, res) => {
@@ -167,9 +154,43 @@ app.get('/captions/random/:captionIds',
 //     } catch (err) {
 //       res.status(500).end();
 //     }
-//   }
+//   }date: new Date(), meme: props.selecteditem, score: 0, GameScore: 0
 // );
 
+app.post('/history/store',
+  isLoggedIn,
+  async (req, res) => {
+    const history = {
+      date: req.body.gameResult['date'],
+      meme: req.body.gameResult['meme'], 
+      score: req.body.gameResult['score'],
+      totalScore: req.body.gameResult['GameScore'],
+      user: req.user.id  // user is overwritten with the id of the user that is doing the request and it is logged in
+    };
+
+    try {
+      const result = await historyDao.createHistory(history); // NOTE: createFilm returns the new created object
+      res.status(200).json({ message: "created" });
+    } catch (err) {
+      res.status(504).json({ error: `Database error during the creation of new history: ${err}` });
+    }
+  }
+);
+
+app.get('/history/get',
+  isLoggedIn,
+  async (req, res) => {
+    try {
+      const result = await historyDao.getUserHistory(req.user.id);
+      if (result.error)
+        res.status(404).json(result);
+      else
+        res.status(200).json(result);
+    } catch (err) {
+      res.status(500).json({ error: err });
+    }
+  }
+);
 
 // activate the server
 app.listen(port, () => {
