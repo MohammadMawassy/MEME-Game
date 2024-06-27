@@ -36,7 +36,7 @@ function getJson(httpResponsePromise) {
 
 const getUserHistory = async () => {
   return getJson(
-    fetch(SERVER_URL + "history/get", {
+    fetch(SERVER_URL + "/history/get", {
       credentials: 'include'
     })
   ).then((response) => { return response })
@@ -96,7 +96,6 @@ const logOut = async() => {
   if (response.ok)
     return null;
 }
-
 const getItems = async (isLoggedIn) => {
     const response = await fetch(SERVER_URL + '/items/' + isLoggedIn)
     if(response.ok) {
@@ -106,6 +105,7 @@ const getItems = async (isLoggedIn) => {
     else
     throw new Error('Internal server error');
 }
+
 
 const getCaptionsForItem = async (itemId) => {
   const response = await fetch(SERVER_URL + '/captions/' + itemId);

@@ -218,7 +218,7 @@ function HistoryPage(props) {
   
     return (
       history ? (<Container fluid id='history-page' className="d-flex align-items-center flex-column justify-content-center">
-        <div className='history-menu shadow p-4'>
+        <div className='history-menu dark-transparent-box p-4 mt-5'>
           <h1 className='p-4 pb-1 mb-0'>{props.user.name}'s History</h1>
           <HistoryTable user={props.user} history={history}></HistoryTable>
           <div className='d-flex flex-column justify-content-center align-items-center'>

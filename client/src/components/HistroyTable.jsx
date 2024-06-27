@@ -15,8 +15,8 @@ const HistoryTable = ({ history }) => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th className='text-center'>gameid</th>
-                                <th className='text-center'>roundnumber</th>
+                                {/* <th className='text-center'>gameid</th> */}
+                                {/* <th className='text-center'>roundnumber</th> */}
                                 <th className='text-center'>scoreForRound</th>
                                 <th className='text-center'>ScoreForGame</th>
                                 <th className='text-center'>MEME</th>                                
