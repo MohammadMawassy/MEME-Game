@@ -23,7 +23,7 @@ const getUserHistory = (user) => {
           const history = rows.map(row => ({
             date: row.date,
             score: row.score,
-            meme: row.item.name,
+            item: row.item,
             GameScore: row.GameScore
           }));
           resolve(history);

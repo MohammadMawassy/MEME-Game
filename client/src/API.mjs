@@ -111,7 +111,6 @@ const getCaptionsForItem = async (itemId) => {
   const response = await fetch(SERVER_URL + '/captions/' + itemId);
   if(response.ok) {
     const responseJson = await response.json();
-    console.log(responseJson, "response from getCaptionsForItem"+itemId);
     return responseJson;
   }
   else {
@@ -122,7 +121,6 @@ const getCaptionsForItem = async (itemId) => {
 const getRandomCaptionsExcluding = async (excludeIds) => {
   const response = await fetch(SERVER_URL + '/captions/random/' + excludeIds.join(','));
   if(response.ok) {
-    console.log(response, "response from getRandomCaptionsExcluding");
     return await response.json();
   }
   else {

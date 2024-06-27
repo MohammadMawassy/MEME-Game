@@ -25,7 +25,9 @@ const CaptionItem = (props) => {
                     setguessedTrue(true);
                     props.setSelectedItem(true)
                     props.updateclicks();
-                    handleAddSelection();
+                    if(props.loggedIn){
+                        handleAddSelection();
+                    }
                     props.addgameresult({date: new Date(), meme: props.selecteditem.name, score: 5, GameScore: 5});
                     
                 }else{
@@ -40,9 +42,7 @@ const CaptionItem = (props) => {
             </Button>
             {(alert) && <MatchAlert clicks={props.clicks} selecteditem={props.selecteditem} updateCorrectSelectionAtIndex={props.updateCorrectSelectionAtIndex} updateCompletedAtIndex={props.updateCompletedAtIndex} setShowTimeAlert={props.setShowTimeAlert} setSelectedItem={props.setSelectedItem} restartGame={props.restartGame} setRestartGame={props.setRestartGame} guessedTrue={guessedTrue} caption1={captionTrueList[0]} caption2={captionTrueList[1]} round={props.round} newList={props.newList} setAlert={setAlert} loggedIn={props.loggedIn} />}
         </>
-        
     );
-    
 }
 
 const TrueCaption = (props) => {

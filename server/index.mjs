@@ -76,7 +76,6 @@ app.post('/api/sessions', function(req, res, next) {
       req.login(user, (err) => {
         if (err)
           return next(err);
-        console.log(req)
         // req.user contains the authenticated user, we send all the user info back
         return res.status(201).json(req.user);
       });
@@ -86,7 +85,6 @@ app.post('/api/sessions', function(req, res, next) {
 // GET /api/sessions/current -- NEW
 app.get('/api/sessions/current', (req, res) => {
   if(req.isAuthenticated()) {
-    console.log(req)
     res.json(req.user);}
   else
     res.status(401).json({error: 'Not authenticated'});
@@ -143,25 +141,16 @@ app.get('/captions/random/:captionIds',
   }
 );
 
-// app.get('/items/:itemId',
-//   async (req, res) => {
-//     try {
-//       const result = await getCaptionsForItem(req.params.itemId)
-//       if (result.error)
-//         res.status(404).json(result);
-//       else
-//         res.json(result);
-//     } catch (err) {
-//       res.status(500).end();
-//     }
-//   }date: new Date(), meme: props.selecteditem, score: 0, GameScore: 0
-// );
-
-app.post('/history/store',
-  isLoggedIn,
+app.post('/history/store',isLoggedIn,
+  [
+    // Validation middleware
+    check('gameResult.GameScore').isIn([0, 5]).withMessage('Score must be either 0 or 5'),
+    check('gameResult.score').isInt({ min: 0, max: 5 }).withMessage('Score must be between 0 and 5'),
+    
+  ],
   async (req, res) => {
     const history = {
-      date: req.body.gameResult['date'],
+      date: new Date(req.body.gameResult['date']),
       meme: req.body.gameResult['meme'], 
       score: req.body.gameResult['score'],
       totalScore: req.body.gameResult['GameScore'],

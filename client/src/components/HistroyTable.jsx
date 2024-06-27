@@ -15,9 +15,9 @@ const HistoryTable = ({ history }) => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                {/* <th className='text-center'>gameid</th> */}
+                                <th className='text-center'>Date</th>
                                 {/* <th className='text-center'>roundnumber</th> */}
-                                <th className='text-center'>scoreForRound</th>
+                                <th className='text-center'>ScoreForRound</th>
                                 <th className='text-center'>ScoreForGame</th>
                                 <th className='text-center'>MEME</th>                                
                             </tr>
@@ -25,14 +25,15 @@ const HistoryTable = ({ history }) => {
                         <tbody>
                             {
                                 history.map((row, index) => (
+                                    
                                     <tr key={index}>
-                                        <td>{index}</td>
-                                        <td className='text-center'>{row[0]}</td>
-                                        <td className='text-center'>{row[1]}</td>
-                                        <td className='text-center'>{row[2]}</td>
-                                        <td className='text-center'>{row[3]}</td>
+                                        <td>{index+1}</td>
+                                        <td className='text-center'>{row.date}</td>
+                                        <td className='text-center'>{row.score}</td>
+                                        {/* <td className='text-center'>{row.scoreForGame}</td> */}
+                                        <td className='text-center'>{row.GameScore}</td>
                                         <td className='text-center'>
-                                            <Image fluid className='item-image m-0 bg-card-image d-flex' src={`/memes_images/${row[4]}.jpg`} style={{ maxWidth: '300px', maxHeight: '75px', objectFit: 'cover' }} />
+                                            <Image fluid className='item-image m-0 bg-card-image d-flex' src={`/memes_images/${row.item}.jpg`} style={{ maxWidth: '300px', maxHeight: '75px', objectFit: 'cover' }} />
                                         </td>
                                     </tr>
                                 ))
