@@ -3,9 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { LogoutButton, LoginButton } from './Auth';
 import { Navbar, Row, Button } from 'react-bootstrap';
 
-
-
-
 function Navigation (props) {
   const navigate = useNavigate();
 

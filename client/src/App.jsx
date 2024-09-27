@@ -12,23 +12,18 @@ import { useEffect, useState } from 'react';
 function App() {
 
   const [matchItemList, setMatchItemList] = useState([]);
-  // const [captionlist, setCaptionList] = useState([]);
 
-  const [loggedIn, setLoggedIn] = useState(false); // to be changed to false
+  const [loggedIn, setLoggedIn] = useState(false); 
   const [user, setUser] = useState("soso");
   const [message, setMessage] = useState('');
   const [restartGame, setRestartGame] = useState(false);
   const [correctselection, setCorrectSelection] = useState([]);
 
   const handleLogin = async (credentials) => {
-    try {
       const user = await API.logIn(credentials);
       setLoggedIn(true);
       setMessage({msg: `Welcome, ${user.name}!`, type: 'success'});
       setUser(user);
-    }catch(err) {
-      setMessage({msg: err, type: 'danger'});
-    }
   };
 
   const handleLogout = async () => {
@@ -83,7 +78,7 @@ function App() {
                 <Route path="/game/round2" element={(loggedIn && user) ? <MatchPage emptySelection={emptySelection} addSelection={addSelection} round = {2} delay={30} loggedIn = {loggedIn} restartGame={restartGame} setRestartGame={setRestartGame} /> : <Navigate replace to='/'/>} />
                 <Route path="/game/round3" element={(loggedIn && user) ? <MatchPage emptySelection={emptySelection} addSelection={addSelection} round = {3} delay={30} loggedIn = {loggedIn} restartGame={restartGame} setRestartGame={setRestartGame} /> : <Navigate replace to='/'/>} />
                 <Route path='/login' element={!loggedIn ? <LoginPage login={loggedIn} loginaction={handleLogin} /> : <Navigate replace to='/' />} />
-                <Route path="/history" element={(loggedIn && user) ? <HistoryPage user={user}  /> : <Navigate replace to='/login' />} />
+                <Route path="/history" element={(loggedIn && user) ? <HistoryPage user={user} /> : <Navigate replace to='/login' />} />
                 <Route path="/recap" element={(loggedIn) ? <Recappage correctselection={correctselection} /> : <Navigate replace to='/'/>} />
                 <Route path="*" element={<NotFoundLayout />} />
             </Routes>
