@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button, Row, Col, Alert } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
 
@@ -8,14 +8,28 @@ import { useNavigate } from 'react-router-dom';
 function LoginForm(props) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    const [show, setShow] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
+
     const navigate = useNavigate();
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        
         const credentials = { username, password };
         
-        props.login(credentials);
+        props.login(credentials)
+          .then ( () => {})
+          .catch( (err) => {
+            // if(err.message === "Unauthorized"){
+            //   setErrorMessage("Invalid username and/or password");
+            //   console.log(errorMessage)
+            //   console.log(show)}
+            // else
+            //   setErrorMessage(err.message);
+            setErrorMessage("Invalid username and/or password");
+            setShow(true);
+          });
     };
   
     return (
@@ -24,13 +38,13 @@ function LoginForm(props) {
         <h1 className="pb-3">Login</h1>
 
         <Form onSubmit={handleSubmit}>
-          {/* <Alert
-            dismissible
-            show={show}
-            onClose={() => setShow(false)}
-            variant="danger">
-            {errorMessage}
-          </Alert> */}
+          <Alert
+                dismissible
+                show={show}
+                onClose={() => setShow(false)}
+                variant="danger">
+                {errorMessage}
+          </Alert>
           <Form.Group className="mb-3 d-flex flex-column align-items-start" controlId="username" >
             <Form.Label>Email</Form.Label>
             <Form.Control

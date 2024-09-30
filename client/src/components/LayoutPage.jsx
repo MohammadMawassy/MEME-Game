@@ -104,11 +104,19 @@ function MatchPage({round , delay , ...props }) {
     }
   };
 
-  if (gameResult.length ===3 && !hasFunctionRun) {
-    handleGameResultUpdate();
-    setHasFunctionRun(!hasFunctionRun);
-    // Ensure the function won't be called again
-  }
+  // if (gameResult.length ===3 && !hasFunctionRun) {
+  //   handleGameResultUpdate();
+  //   setHasFunctionRun(!hasFunctionRun);
+  //   // Ensure the function won't be called again
+  // }
+
+  useEffect(() => {
+    if (gameResult.length === 3 && !hasFunctionRun) {
+      handleGameResultUpdate();
+      setHasFunctionRun(hasFunctionRun => !hasFunctionRun); // Functional update
+      // Ensure the function won't be called again
+    }
+  }, [gameResult, hasFunctionRun]);
 
   const captionlistshuffeled = captionList.sort(() => Math.random() - 0.5); // shuffle the list of captions to be displayed at every render as additional difficulty
 
@@ -151,7 +159,6 @@ function LoginPage(props) {
     </Container>)
   );
 }
-
 
 function HistoryPage(props) {
     const [totalScore, setTotalScore] = useState(0);
